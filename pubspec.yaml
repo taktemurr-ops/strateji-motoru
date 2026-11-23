@@ -1,0 +1,21 @@
+name: strateji_motoru
+description: "Strateji ve Roguelike ailesinin ortak motoru: zindan, deste, altıgen savaş, taktik, hayatta kalma, arena ve vadi kurma."
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.2
+  studio_core:
+    git:
+      url: https://github.com/taktemurr-ops/studio-core
+      ref: 921df6392b2121ffd438a286673ef9f10c988273
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
