@@ -15,8 +15,8 @@ void main() {
     test('${e.key}: aynı tohum aynı bölümü verir', () {
       final rules = stratejiRulesFor('oyun-test-${e.key}', e.key);
       final planner = LevelPlanner(gameId: rules.gameId, optionalMechanics: const []);
-      final a = rules.build(planner.spec(123)).puzzle as SLevel;
-      final b = rules.build(planner.spec(123)).puzzle as SLevel;
+      final a = rules.build(planner.spec(123)).puzzle;
+      final b = rules.build(planner.spec(123)).puzzle;
       expect(a.d, b.d);
       expect(a.puzzle.runtimeType, b.puzzle.runtimeType);
     });
