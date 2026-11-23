@@ -607,11 +607,14 @@ class _ArViewState extends State<_ArView> with Clock, MetaLoader {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: hinted == i ? SColors.gold : kTribeColors[ty.tribe], width: hinted == i ? 3 : 1.5),
           ),
-          child: Column(children: [
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(height: 30, width: 30, child: TapCanvas(w: 20, h: 20, paint: (c) => _creature(c, const Offset(10, 10), t, 1, 7))),
             Text(st(lang, ty.key), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: SColors.ink)),
             Text('♥${ty.hp} ⚔${ty.atk} ◉3', style: const TextStyle(fontSize: 9, color: SColors.ink)),
           ]),
+          ),
         ),
       ),
     );
