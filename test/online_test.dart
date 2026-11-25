@@ -451,7 +451,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.byType(viewType(k)), findsNothing);
       await tester.tap(find.byIcon(Icons.people_alt));
-      await tester.pump(const Duration(milliseconds: 600));
+      for (var i = 0; i < 4; i++) {
+        await tester.pump(const Duration(milliseconds: 200));
+      }
       expect(find.byType(viewType(k)), findsOneWidget);
       final g = viewGame(tester, k);
       for (var i = 0; i < 400 && !g.over; i++) {
@@ -461,7 +463,9 @@ void main() {
       await tester.pump(const Duration(seconds: 2));
       expect(results, isEmpty); // deneme maçı kaydedilmez
       await tester.tap(find.byType(FilledButton).last);
-      await tester.pump(const Duration(milliseconds: 600));
+      for (var i = 0; i < 4; i++) {
+        await tester.pump(const Duration(milliseconds: 200));
+      }
       expect(find.byType(viewType(k)), findsNothing);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
