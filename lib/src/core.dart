@@ -53,6 +53,9 @@ abstract class StratejiKind {
 
   Widget build(StratejiPlay play);
 
+  /// İki kişilik düellosu var mı (bilgisayara karşı, çevrimiçi masa, aynı cihaz).
+  bool get duel => false;
+
   /// Kalıcı kazanımlar (artan eşiklerle).
   List<Perk> get perks;
 
@@ -94,6 +97,10 @@ class StratejiRules extends GameRules<SLevel> {
 
   @override
   List<String> get optionalMechanics => const [];
+
+  /// Düellolu türlerde ana sayfa "Bilgisayara karşı" ve "Çevrimiçi masa" sunar.
+  @override
+  int get localPlayers => kind.duel ? 2 : 0;
 
   @override
   List<GameModeId> get modes => const [GameModeId.campaign, GameModeId.daily, GameModeId.weekly, GameModeId.challenge];

@@ -6,7 +6,10 @@ library;
 
 export 'src/catalog.dart';
 export 'src/core.dart' show StratejiStage, StratejiRules, StratejiKind, SLevel, SPuzzle, Perk, Meta, stratejiRules;
+export 'src/games/altigen.dart' show HDuel, HDuelView, hMirror, kHCells;
 export 'src/games/harita.dart' show hOrients, hGoal, kHN;
 export 'src/games/krallik_cards.dart' show kKCards, KCard;
+export 'src/games/taktik.dart' show TDuel, TDuelView;
 export 'src/games/zar.dart' show ZPuzzle, zBot;
 export 'src/texts.dart';
+export 'src/versus.dart' show DuelGame, StratNet, DuelMode;
