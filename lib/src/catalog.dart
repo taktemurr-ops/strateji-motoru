@@ -5,10 +5,12 @@ import 'games/deste.dart';
 import 'games/harita.dart';
 import 'games/hayatta.dart';
 import 'games/krallik.dart';
+import 'games/savasci.dart';
 import 'games/taktik.dart';
 import 'games/vadi.dart';
 import 'games/zar.dart';
 import 'games/zindan.dart';
+import 'games/zindanusta.dart';
 
 /// Strateji ve Roguelike türleri.
 const Map<String, StratejiKind> kStratejiKinds = {
@@ -22,6 +24,8 @@ const Map<String, StratejiKind> kStratejiKinds = {
   'zar': ZarKind(),
   'krallik': KrallikKind(),
   'harita': HaritaKind(),
+  'savasci': SavasciKind(),
+  'zindanusta': ZindanUstaKind(),
 };
 
 StratejiRules stratejiRulesFor(String gameId, String kind) => stratejiRules(gameId, kStratejiKinds[kind]!);
