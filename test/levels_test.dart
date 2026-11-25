@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studio_core/core/level_plan.dart';
+import 'package:studio_core/core/strings.dart';
 import 'package:strateji_motoru/strateji_motoru.dart';
 
 void main() {
@@ -47,6 +48,21 @@ void main() {
       expect(c.re.length, 4);
       expect(c.le.join(','), isNot(c.re.join(',')));
       expect(c.qTr.isNotEmpty && c.qEn.isNotEmpty, isTrue);
+    }
+  });
+
+  test('Dört Mevsim Krallık: her kartın sorusu ve iki seçeneği 33 dilde dolu', () {
+    expect(Strings.languages.length, 33);
+    for (var i = 0; i < kKCards.length; i++) {
+      final c = kKCards[i];
+      for (final (name, l) in [('soru', c.q), ('sol', c.l), ('sağ', c.r)]) {
+        expect(l.length, 33, reason: '#$i $name');
+        for (var k = 0; k < 33; k++) {
+          expect(l[k].trim().isNotEmpty, isTrue, reason: '#$i $name ${Strings.languages[k]}');
+        }
+      }
+      expect(c.left('ja'), c.l[23]);
+      expect(c.question('xx'), c.q[1]);
     }
   });
 

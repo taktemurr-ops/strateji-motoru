@@ -193,8 +193,6 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
     loadMeta(p.gameId, _applyPerks);
   }
 
-  String _tx(String tr, String en) => p.lang == 'tr' ? tr : en;
-
   void _choose(int ch) {
     if (ended || i >= z.cards.length) return;
     started = true;
@@ -338,9 +336,9 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
         ),
       ),
       bottom: Row(children: [
-        Expanded(child: _opt(_tx(c.lTr, c.lEn), Icons.arrow_back, 0)),
+        Expanded(child: _opt(c.left(p.lang), Icons.arrow_back, 0)),
         const SizedBox(width: 8),
-        Expanded(child: _opt(_tx(c.rTr, c.rEn), Icons.arrow_forward, 1)),
+        Expanded(child: _opt(c.right(p.lang), Icons.arrow_forward, 1)),
       ]),
     );
   }
@@ -420,13 +418,13 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
           const SizedBox(height: 4),
           Text(st(lang, kKAdvisors[c.who]), style: const TextStyle(fontSize: 12, color: Colors.black54)),
           const SizedBox(height: 10),
-          Text(_tx(c.qTr, c.qEn), textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, height: 1.3)),
+          Text(c.question(lang), textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, height: 1.3)),
           const SizedBox(height: 10),
           SizedBox(
             height: 20,
             child: side < 0
                 ? null
-                : Text(side == 0 ? _tx(c.lTr, c.lEn) : _tx(c.rTr, c.rEn), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, color: SColors.accent)),
+                : Text(side == 0 ? c.left(lang) : c.right(lang), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, color: SColors.accent)),
           ),
         ]),
       );
