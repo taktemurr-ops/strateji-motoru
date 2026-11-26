@@ -117,9 +117,10 @@ PlayContext duelCtx(GeneratedLevel gl, List<SeatRole> seats, List<RoundResult> r
 final Map<String, DuelGame Function(int seed)> kinds = {
   'altigen': HDuel.new,
   'taktik': TDuel.new,
+  'heybe': HbDuel.new,
 };
 
-Type viewType(String k) => k == 'altigen' ? HDuelView : TDuelView;
+Type viewType(String k) => k == 'altigen' ? HDuelView : (k == 'heybe' ? HbDuelView : TDuelView);
 
 Future<GeneratedLevel> level(String k) async {
   final rules = stratejiRulesFor('oyun-o-$k', k);
@@ -141,7 +142,7 @@ DuelGame viewGame(WidgetTester tester, String k) => (tester.state(find.byType(vi
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('yalnızca Altıgen Savaş ve Sıra Tabanlı Taktik iki kişilik', () {
+  test('yalnızca Altıgen Savaş, Sıra Tabanlı Taktik ve Heybe Savaşları iki kişilik', () {
     for (final k in kStratejiKinds.keys) {
       expect(stratejiRulesFor('oyun-$k', k).localPlayers, kinds.containsKey(k) ? 2 : 0, reason: k);
     }
