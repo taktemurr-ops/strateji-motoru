@@ -151,7 +151,7 @@ class HbSide {
   }
   final ra = hp[0] / s[0].maxHp, rb = hp[1] / s[1].maxHp;
   final w = hp[0] <= 0 && hp[1] <= 0 ? -1 : (hp[1] <= 0 ? 0 : (hp[0] <= 0 ? 1 : (ra > rb + 1e-9 ? 0 : (rb > ra + 1e-9 ? 1 : -1))));
-  return (w, math.max(0, hp[0].ceil()), math.max(0, hp[1].ceil()));
+  return (w, math.max<int>(0, hp[0].ceil()), math.max<int>(0, hp[1].ceil()));
 }
 
 /// Pazar: [n] eşya, tohuma bağlı.
@@ -555,8 +555,8 @@ class _HbViewState extends State<_HbView> with Clock, MetaLoader {
           ),
           const SizedBox(width: 6),
           if (selBag >= 0) SChip(onTap: _sell, child: Text(st(lang, 'sell'))),
-          const Spacer(),
-          StudioButton(onPressed: ended ? null : _fight, icon: Icons.sports_kabaddi, label: st(lang, 'fight')),
+          const SizedBox(width: 6),
+          Expanded(child: StudioButton(onPressed: ended ? null : _fight, icon: Icons.sports_kabaddi, label: st(lang, 'fight'))),
         ]),
       ]),
     );
@@ -632,12 +632,13 @@ class HbDuel implements DuelGame {
         bags[s].removeAt(a[0]);
         return true;
       case 'r':
-        if (gold[s] < 1) return false;
+        if (mv != 'r' || gold[s] < 1) return false;
         gold[s]--;
         rerolls[s]++;
         shops[s] = hbShop(seed, round, s, rerolls[s]);
         return true;
       case 'e':
+        if (mv != 'e') return false;
         if (s == 0) {
           seat = 1;
         } else {
@@ -796,15 +797,17 @@ class HbDuelViewState extends State<HbDuelView> with Clock, DuelHost {
                     if (play('s$selBag')) p.sfx(Sfx.coin);
                   },
                   child: Text(st(lang, 'sell'))),
-            const Spacer(),
-            StudioButton(
-                onPressed: myTurn
-                    ? () {
-                        if (play('e')) p.sfx(Sfx.place);
-                      }
-                    : null,
-                icon: Icons.skip_next,
-                label: st(lang, 'endTurn')),
+            const SizedBox(width: 6),
+            Expanded(
+              child: StudioButton(
+                  onPressed: myTurn
+                      ? () {
+                          if (play('e')) p.sfx(Sfx.place);
+                        }
+                      : null,
+                  icon: Icons.skip_next,
+                  label: st(lang, 'endTurn')),
+            ),
           ]),
         ]),
       ),
