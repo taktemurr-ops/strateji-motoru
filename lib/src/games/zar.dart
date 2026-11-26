@@ -531,8 +531,8 @@ class _ZViewState extends State<_ZView> with Clock, MetaLoader {
         height: 48,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            if (f.$1 == 3) Icon(kZFaceIcons[3], size: 12, color: kZFaceColors[3]),
-            Icon(kZFaceIcons[f.$1 == 4 ? 4 : t], size: 22, color: kZFaceColors[f.$1 == 4 ? 4 : t]),
+            if (f.$1 == 3) Icon(kZFaceIcons[3], size: 12, color: studioLift(kZFaceColors[3])),
+            Icon(kZFaceIcons[f.$1 == 4 ? 4 : t], size: 22, color: studioLift(kZFaceColors[f.$1 == 4 ? 4 : t])),
           ]),
           Text(f.$1 == 4 ? '' : '${f.$2}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
         ]),
@@ -559,7 +559,7 @@ class _ZViewState extends State<_ZView> with Clock, MetaLoader {
                 p.sfx(Sfx.coin);
               },
               child: Row(children: [
-                Icon(icon, color: SColors.ink),
+                Icon(icon, color: Colors.white),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

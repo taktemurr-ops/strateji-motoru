@@ -705,7 +705,10 @@ class DCardView extends StatelessWidget {
             border: Border.all(color: highlight ? SColors.gold : const Color(0x33000000), width: highlight ? 3 : 1),
             boxShadow: const [BoxShadow(blurRadius: 3, color: Colors.black26, offset: Offset(0, 1))],
           ),
-          child: Column(children: [
+          // Kart yüzü açık renkli kalır (kart çizimi): yazı ve etki simgeleri koyu.
+          child: DefaultTextStyle.merge(
+            style: const TextStyle(color: SColors.ink),
+            child: Column(children: [
             Row(children: [
               Container(
                 width: 22,
@@ -722,6 +725,7 @@ class DCardView extends StatelessWidget {
             ),
             Wrap(alignment: WrapAlignment.center, spacing: 4, runSpacing: 2, children: effects),
           ]),
+          ),
         ),
       ),
     );

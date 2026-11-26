@@ -904,7 +904,8 @@ class _OsViewState extends State<_OsView> with Clock, MetaLoader {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               SizedBox(width: 28, height: 28, child: TapCanvas(w: 1, h: 1, paint: (c) => _unit(c, const Offset(0.5, 0.5), ty, 1, 0, false))),
               Text(st(lang, t.key), maxLines: 1, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: SColors.ink)),
-              Text('${st(lang, 'os_cl${t.cls}')} · ◉${t.tier}', style: TextStyle(fontSize: 9, color: kOsClassColors[t.cls])),
+              Text('${st(lang, 'os_cl${t.cls}')} · ◉${t.tier}',
+                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Color.lerp(kOsClassColors[t.cls], Colors.black, 0.45))),
               Text('♥${t.hp} ⚔${t.atk} ↔${t.range}', style: const TextStyle(fontSize: 9, color: SColors.ink)),
             ]),
           ),

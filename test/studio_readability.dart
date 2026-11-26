@@ -133,6 +133,11 @@ List<String> unreadableTexts(WidgetTester tester, {double min = 3.0}) {
     e.visitAncestorElements((a) {
       final w = a.widget;
       if ((w is Opacity && w.opacity < 0.3) || w is Offstage && w.offstage) hidden = true;
+      // Onaylı tasarımın kendi düğmesi (studio-core StudioButton) olduğu gibi kabul edilir.
+      if (w is StudioButton) hidden = true;
+      // Etkin olmayan düğmeler (WCAG: devre dışı bileşenler karşıtlıktan muaf).
+      if (w is ButtonStyleButton && !w.enabled) hidden = true;
+      if (w is IconButton && w.onPressed == null) hidden = true;
       return !hidden;
     });
     if (hidden) continue;

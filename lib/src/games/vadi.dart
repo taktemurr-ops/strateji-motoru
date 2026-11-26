@@ -362,7 +362,7 @@ class _VViewState extends State<_VView> with Clock, MetaLoader {
                 color: hint?.$1 == i ? const Color(0xFFF6E3B4) : null,
                 tooltip: st(lang, kVBuild[vis[i]]),
                 onTap: () => setState(() => pick = i),
-                child: Icon(kVIcons[vis[i]], color: kVColors[vis[i]], size: 26),
+                child: Icon(kVIcons[vis[i]], color: studioLift(kVColors[vis[i]]), size: 26),
               ),
             ),
           if (s.queue.length > vis.length) Text('+${s.queue.length - vis.length}', style: const TextStyle(color: kStudioSubtle)),
