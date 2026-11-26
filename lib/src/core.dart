@@ -296,7 +296,7 @@ class IconNum extends StatelessWidget {
     // renkler okunur kalsın diye açılır. Açık kartlarda olduğu gibi kalır.
     final ambient = DefaultTextStyle.of(context).style.color ?? Colors.white;
     var c = color ?? ambient;
-    if (ambient.computeLuminance() > 0.5) c = studioLift(c, min: 0.32);
+    if (ambient.computeLuminance() > 0.5) c = studioLift(c);
     return Row(mainAxisSize: MainAxisSize.min, children: [
       Icon(icon, size: size + 2, color: c),
       const SizedBox(width: 2),

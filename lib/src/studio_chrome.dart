@@ -56,7 +56,7 @@ const Color kStudioSubtle = Color(0xFFC9CCE4);
 
 /// Koyu zeminde okunur kalsın diye koyu renkleri açar (oyunun renk
 /// kodlaması korunur: ton aynı, yalnız parlaklık artar).
-Color studioLift(Color c, {double min = 0.30}) {
+Color studioLift(Color c, {double min = 0.45}) {
   var out = c;
   for (var i = 0; i < 4 && out.computeLuminance() < min; i++) {
     out = Color.lerp(out, Colors.white, 0.3)!;
