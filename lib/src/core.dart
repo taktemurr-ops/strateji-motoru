@@ -592,7 +592,7 @@ class SChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final look = StudioLook.of(context);
     final c = color ?? Color.lerp(look.card, Colors.white, 0.08)!;
-    final bg = selected ? Color.lerp(c, look.accent, 0.35)! : c;
+    final bg = selected ? Color.lerp(c, look.accent, 0.18)! : c;
     final fg = bg.computeLuminance() > 0.4 ? SColors.ink : Colors.white;
     final w = Material(
       color: bg,

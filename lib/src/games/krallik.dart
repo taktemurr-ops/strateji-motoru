@@ -369,7 +369,7 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
     return Tooltip(
       message: st(lang, kKMeters[k]),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(kKMeterIcons[k], color: warn ? SColors.bad : kKMeterColors[k], size: 26),
+        Icon(kKMeterIcons[k], color: studioLift(warn ? SColors.bad : kKMeterColors[k]), size: 26),
         const SizedBox(height: 4),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -387,7 +387,7 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
                   for (var j = 0; j < (peek ? delta.abs() : 1); j++)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1),
-                      child: Icon(delta > 0 ? Icons.arrow_drop_up : Icons.arrow_drop_down, size: 14, color: delta > 0 ? SColors.good : SColors.bad),
+                      child: Icon(delta > 0 ? Icons.arrow_drop_up : Icons.arrow_drop_down, size: 14, color: delta > 0 ? StudioLook.good : StudioLook.bad),
                     ),
                 ]),
         ),
