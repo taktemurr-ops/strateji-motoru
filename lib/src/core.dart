@@ -12,6 +12,7 @@ import 'package:studio_core/core/rng.dart';
 import 'package:studio_core/core/stats.dart';
 
 import 'texts.dart';
+import 'studio_chrome.dart';
 
 /// Strateji oyunlarından birinin kurulmuş bölümü (tohum + zorluk + harita).
 abstract class SPuzzle {
@@ -196,8 +197,12 @@ class StratejiStage extends StatelessWidget {
   final StratejiRules rules;
   const StratejiStage({super.key, required this.ctx, required this.rules});
 
+  /// Motorun bütün arayüzü (paneller, pencereler, düğmeler) onaylı koyu
+  /// tasarımda; tahta çizimleri kendi renklerini korur.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => StudioChrome(child: Builder(builder: _build));
+
+  Widget _build(BuildContext context) {
     final lv = ctx.generated.puzzle as SLevel;
     return rules.kind.build(StratejiPlay(
       ctx: ctx,
@@ -242,7 +247,6 @@ class PerkStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return SizedBox(
       height: 30,
       child: ListView(scrollDirection: Axis.horizontal, children: [
@@ -262,14 +266,15 @@ class PerkStrip extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: p.need <= usta ? scheme.surface.withValues(alpha: 0.95) : scheme.surface.withValues(alpha: 0.45),
+              color: p.need <= usta ? StudioLook.good.withValues(alpha: 0.18) : Colors.white.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: p.need <= usta ? SColors.good : Colors.black12),
+              border: Border.all(color: p.need <= usta ? StudioLook.good : Colors.white24),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Icon(p.need <= usta ? p.icon : Icons.lock_outline, size: 14, color: p.need <= usta ? SColors.good : Colors.black38),
+              Icon(p.need <= usta ? p.icon : Icons.lock_outline, size: 14, color: p.need <= usta ? StudioLook.good : Colors.white54),
               const SizedBox(width: 4),
-              Text(p.need <= usta ? p.label(lang) : '${p.need}', style: TextStyle(fontSize: 11, color: p.need <= usta ? null : Colors.black45)),
+              Text(p.need <= usta ? p.label(lang) : '${p.need}',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: p.need <= usta ? Colors.white : Colors.white60)),
             ]),
           ),
       ]),
@@ -281,16 +286,23 @@ class PerkStrip extends StatelessWidget {
 class IconNum extends StatelessWidget {
   final IconData icon;
   final String text;
-  final Color color;
+  final Color? color;
   final double size;
-  const IconNum(this.icon, this.text, {super.key, this.color = SColors.ink, this.size = 14});
+  const IconNum(this.icon, this.text, {super.key, this.color, this.size = 14});
 
   @override
-  Widget build(BuildContext context) => Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, size: size + 2, color: color),
-        const SizedBox(width: 2),
-        Text(text, style: TextStyle(fontSize: size, fontWeight: FontWeight.w700, color: color)),
-      ]);
+  Widget build(BuildContext context) {
+    // Çevredeki yazı rengi açıksa zemin koyudur (onaylı tasarım): koyu
+    // renkler okunur kalsın diye açılır. Açık kartlarda olduğu gibi kalır.
+    final ambient = DefaultTextStyle.of(context).style.color ?? Colors.white;
+    var c = color ?? ambient;
+    if (ambient.computeLuminance() > 0.5) c = studioLift(c);
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Icon(icon, size: size + 2, color: c),
+      const SizedBox(width: 2),
+      Text(text, style: TextStyle(fontSize: size, fontWeight: FontWeight.w700, color: c)),
+    ]);
+  }
 }
 
 /// Ekranın ortasında kısa bir bilgi kartı (ödül seçimi, raunt sonucu).
@@ -301,19 +313,20 @@ class SPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final look = StudioLook.of(context);
     return Center(
       child: Container(
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(14),
         constraints: const BoxConstraints(maxWidth: 460),
         decoration: BoxDecoration(
-          color: scheme.surface.withValues(alpha: 0.97),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [BoxShadow(blurRadius: 16, color: Colors.black26)],
+          color: look.sheet.withValues(alpha: 0.97),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: look.accent.withValues(alpha: 0.55), width: 1.4),
+          boxShadow: const [BoxShadow(blurRadius: 18, color: Colors.black45)],
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
           const SizedBox(height: 10),
           ...children,
         ]),
@@ -405,20 +418,31 @@ class SBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final look = StudioLook.of(context);
     return Container(
       margin: const EdgeInsets.fromLTRB(8, 4, 8, 0),
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 48,
-      decoration: BoxDecoration(color: scheme.surface.withValues(alpha: 0.92), borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.28),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: look.accent.withValues(alpha: 0.45), width: 1.2),
+      ),
       child: Row(children: [
-        if (left.isNotEmpty) Text(left, style: const TextStyle(fontWeight: FontWeight.w700)),
+        if (left.isNotEmpty) Text(left, style: TextStyle(fontWeight: FontWeight.w900, color: look.number)),
         const SizedBox(width: 8),
-        Expanded(child: FittedBox(fit: BoxFit.scaleDown, alignment: AlignmentDirectional.centerStart, child: Text(status, maxLines: 1))),
+        Expanded(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(status, maxLines: 1, style: const TextStyle(fontWeight: FontWeight.w700, color: kStudioSubtle)),
+          ),
+        ),
         ...extra,
         if (onUndo != null) IconButton(tooltip: st(lang, 'undo'), onPressed: onUndo, icon: const Icon(Icons.undo)),
         if (onReset != null) IconButton(tooltip: st(lang, 'reset'), onPressed: onReset, icon: const Icon(Icons.restart_alt)),
-        if (onHint != null) IconButton(tooltip: st(lang, 'hint'), onPressed: onHint, icon: const Icon(Icons.lightbulb_outline)),
+        if (onHint != null)
+          IconButton(tooltip: st(lang, 'hint'), onPressed: onHint, icon: const Icon(Icons.lightbulb_rounded, color: StudioLook.gold)),
       ]),
     );
   }
@@ -566,18 +590,26 @@ class SChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final c = color ?? scheme.surface;
+    final look = StudioLook.of(context);
+    final c = color ?? Color.lerp(look.card, Colors.white, 0.08)!;
+    final bg = selected ? Color.lerp(c, look.accent, 0.18)! : c;
+    final fg = bg.computeLuminance() > 0.4 ? SColors.ink : Colors.white;
     final w = Material(
-      color: selected ? Color.lerp(c, scheme.primary, 0.35) : c,
+      color: bg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: selected ? scheme.primary : Colors.black12, width: selected ? 2.5 : 1),
+        side: BorderSide(color: selected ? look.accent : Colors.white24, width: selected ? 2.5 : 1),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
         onTap: onTap,
-        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), child: child),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: IconTheme.merge(
+            data: IconThemeData(color: fg),
+            child: DefaultTextStyle.merge(style: TextStyle(color: fg, fontWeight: FontWeight.w700), child: child),
+          ),
+        ),
       ),
     );
     final tt = tooltip;

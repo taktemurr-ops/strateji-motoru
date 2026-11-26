@@ -6,6 +6,7 @@ import 'package:studio_core/app/services/audio.dart';
 
 import 'core.dart';
 import 'texts.dart';
+import 'studio_chrome.dart';
 
 /// İki kişilik sıra tabanlı düello (Altıgen Savaş, Sıra Tabanlı Taktik).
 /// Durum yalnızca hamle günlüğünden türer: aynı tohum + aynı hamleler →
@@ -280,5 +281,11 @@ class DuelResultPanel extends StatelessWidget {
 
 /// Aynı cihazda iki kişilik deneme maçı (sefer ekranından açılır).
 void openHotseat(BuildContext context, Widget Function() view) {
-  Navigator.push(context, MaterialPageRoute<void>(builder: (_) => Scaffold(body: SafeArea(child: view()))));
+  // Onaylı tasarım: degrade zemin, motorun koyu teması.
+  Navigator.push(
+    context,
+    MaterialPageRoute<void>(
+      builder: (_) => Scaffold(body: StudioBackdrop(child: SafeArea(child: StudioChrome(child: view())))),
+    ),
+  );
 }

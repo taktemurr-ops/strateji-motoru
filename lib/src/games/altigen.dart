@@ -6,6 +6,7 @@ import 'package:studio_core/core/rng.dart';
 import 'package:studio_core/core/stats.dart';
 
 import '../core.dart';
+import '../studio_chrome.dart';
 import '../texts.dart';
 import '../versus.dart';
 
@@ -521,7 +522,7 @@ class _HViewState extends State<_HView> with Clock, MetaLoader {
       board: TapCanvas(w: _w, h: _h, paint: _paint, onTap: _tap, semantics: st(lang, 'hTitle')),
       bottom: SizedBox(
         width: double.infinity,
-        child: FilledButton.icon(onPressed: ended || busy ? null : _endTurn, icon: const Icon(Icons.skip_next), label: Text(st(lang, 'endTurn'))),
+        child: StudioButton(onPressed: ended || busy ? null : _endTurn, icon: Icons.skip_next, label: st(lang, 'endTurn')),
       ),
     );
   }
@@ -1102,7 +1103,7 @@ class _HDuelViewState extends State<HDuelView> with Clock, DuelHost {
         board: board,
         bottom: SizedBox(
           width: double.infinity,
-          child: FilledButton.icon(onPressed: myTurn ? _endTurn : null, icon: const Icon(Icons.skip_next), label: Text(st(lang, 'endTurn'))),
+          child: StudioButton(onPressed: myTurn ? _endTurn : null, icon: Icons.skip_next, label: st(lang, 'endTurn')),
         ),
       ),
       if (shown)

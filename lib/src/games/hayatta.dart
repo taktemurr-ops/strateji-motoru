@@ -6,6 +6,7 @@ import 'package:studio_core/core/rng.dart';
 import 'package:studio_core/core/stats.dart';
 
 import '../core.dart';
+import '../studio_chrome.dart';
 import '../texts.dart';
 
 /// Issız Kıyı: kurtarma gemisi gelene kadar hayatta kal. Her gün bir olay ve
@@ -417,7 +418,7 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(children: [
-                Icon(kWxIcons[s.wx[s.day + i]], size: i == 0 ? 30.0 : 22.0, color: i == 0 ? SColors.accent : Colors.black45),
+                Icon(kWxIcons[s.wx[s.day + i]], size: i == 0 ? 30.0 : 22.0, color: i == 0 ? StudioLook.of(context).accent : Colors.white54),
                 Text(i == 0 ? st(lang, 'today') : '+$i', style: const TextStyle(fontSize: 11)),
               ]),
             ),
@@ -441,9 +442,13 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
     return Container(
       margin: const EdgeInsets.all(6),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: const Color(0xFFF4EBDD), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0x22000000))),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: StudioLook.of(context).accent.withValues(alpha: 0.45), width: 1.2),
+      ),
       child: Column(children: [
-        Text(st(lang, e.key), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: SColors.ink)),
+        Text(st(lang, e.key), textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: Colors.white)),
         const SizedBox(height: 10),
         Row(children: [
           for (final i in const [0, 1])
@@ -464,7 +469,7 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
 
   Widget _jobs(String lang) => Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          for (var i = 0; i < 2; i++) Icon(i < s.left ? Icons.circle : Icons.circle_outlined, size: 12, color: SColors.accent),
+          for (var i = 0; i < 2; i++) Icon(i < s.left ? Icons.circle : Icons.circle_outlined, size: 12, color: StudioLook.of(context).accent),
         ]),
         const SizedBox(height: 6),
         GridView.count(
