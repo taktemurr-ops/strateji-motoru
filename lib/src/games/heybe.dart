@@ -404,7 +404,7 @@ Widget hbShopRow(String lang, List<int> shop, int gold, int sel, void Function(i
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Icon(kHbItems[shop[i]].icon, size: 18),
                     Text('${kHbItems[shop[i]].w}×${kHbItems[shop[i]].h} ◉${kHbItems[shop[i]].price}',
-                        maxLines: 1, style: TextStyle(fontSize: 10, color: kHbItems[shop[i]].price > gold ? SColors.bad : null)),
+                        maxLines: 1, style: TextStyle(fontSize: 10, color: kHbItems[shop[i]].price > gold ? const Color(0xFFFFB4A2) : null)),
                   ]),
                 ),
         ),
@@ -532,6 +532,11 @@ class _HbViewState extends State<_HbView> with Clock, MetaLoader {
         onHint: ended ? null : _hint,
         extra: [
           IconButton(tooltip: st(lang, 'hb_rotate'), onPressed: () => setState(() => rot = !rot), icon: const Icon(Icons.rotate_90_degrees_ccw)),
+          IconButton(
+            tooltip: st(lang, 'hotseat'),
+            onPressed: () => openHotseat(context, () => HbDuelView(play: p, sandbox: true)),
+            icon: const Icon(Icons.people_alt),
+          ),
         ],
       ),
       top: PerkStrip(lang: lang, perks: p.perks, usta: usta),
@@ -680,7 +685,10 @@ class HbDuel implements DuelGame {
 
 class HbDuelView extends StatefulWidget {
   final StratejiPlay play;
-  const HbDuelView({super.key, required this.play});
+
+  /// Sefer ekranından açılan, sonucu kaydedilmeyen aynı cihaz maçı.
+  final bool sandbox;
+  const HbDuelView({super.key, required this.play, this.sandbox = false});
   @override
   State<HbDuelView> createState() => HbDuelViewState();
 }
@@ -700,7 +708,8 @@ class HbDuelViewState extends State<HbDuelView> with Clock, DuelHost {
   void initState() {
     super.initState();
     startClock();
-    initDuel(HbDuel(p.ctx.match?.seed ?? p.seed), p.ctx);
+    final seed = widget.sandbox ? mixSeed([p.seed, DateTime.now().millisecondsSinceEpoch]) : (p.ctx.match?.seed ?? p.seed);
+    initDuel(HbDuel(seed), widget.sandbox ? null : p.ctx);
   }
 
   /// Ekranda gösterilen heybe: aynı cihazda sırası gelen, yoksa kendi heyben.
@@ -816,7 +825,13 @@ class HbDuelViewState extends State<HbDuelView> with Clock, DuelHost {
           title: resultText(lang),
           color: game.winner < 0 ? SColors.gold : seatColor(game.winner),
           button: st(lang, 'close'),
-          onDone: _report,
+          onDone: () {
+            if (widget.sandbox) {
+              Navigator.maybePop(context);
+            } else {
+              _report();
+            }
+          },
         ),
     ]);
   }

@@ -344,7 +344,7 @@ class _KkViewState extends State<_KkView> with Clock, MetaLoader {
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Icon(kKkTypes[s.hand[h]].icon, size: 18),
                     Text('⚡${kKkTypes[s.hand[h]].cost}',
-                        style: TextStyle(fontSize: 11, color: kKkTypes[s.hand[h]].cost > s.energy[0] ? SColors.bad : null)),
+                        style: TextStyle(fontSize: 11, color: kKkTypes[s.hand[h]].cost > s.energy[0] ? const Color(0xFFFFB4A2) : null)),
                   ]),
                 ),
               ),

@@ -529,13 +529,17 @@ class _ZViewState extends State<_ZView> with Clock, MetaLoader {
       child: SizedBox(
         width: 44,
         height: 48,
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            if (f.$1 == 3) Icon(kZFaceIcons[3], size: 12, color: studioLift(kZFaceColors[3])),
-            Icon(kZFaceIcons[f.$1 == 4 ? 4 : t], size: 22, color: studioLift(kZFaceColors[f.$1 == 4 ? 4 : t])),
+        // Büyük yazıda zarın içi kutuya sığacak kadar küçülür.
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              if (f.$1 == 3) Icon(kZFaceIcons[3], size: 12, color: studioLift(kZFaceColors[3])),
+              Icon(kZFaceIcons[f.$1 == 4 ? 4 : t], size: 22, color: studioLift(kZFaceColors[f.$1 == 4 ? 4 : t])),
+            ]),
+            Text(f.$1 == 4 ? '' : '${f.$2}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
           ]),
-          Text(f.$1 == 4 ? '' : '${f.$2}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-        ]),
+        ),
       ),
     );
   }
