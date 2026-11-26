@@ -12,6 +12,7 @@ import 'package:studio_core/core/rng.dart';
 import 'package:studio_core/core/stats.dart';
 
 import 'texts.dart';
+import 'studio_chrome.dart';
 
 /// Strateji oyunlarından birinin kurulmuş bölümü (tohum + zorluk + harita).
 abstract class SPuzzle {
@@ -196,8 +197,12 @@ class StratejiStage extends StatelessWidget {
   final StratejiRules rules;
   const StratejiStage({super.key, required this.ctx, required this.rules});
 
+  /// Motorun bütün arayüzü (paneller, pencereler, düğmeler) onaylı koyu
+  /// tasarımda; tahta çizimleri kendi renklerini korur.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => StudioChrome(child: Builder(builder: _build));
+
+  Widget _build(BuildContext context) {
     final lv = ctx.generated.puzzle as SLevel;
     return rules.kind.build(StratejiPlay(
       ctx: ctx,
