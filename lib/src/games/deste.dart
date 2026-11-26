@@ -715,7 +715,10 @@ class DCardView extends StatelessWidget {
                 height: 22,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(color: SColors.gold, shape: BoxShape.circle),
-                child: Text('${k.cost}', style: const TextStyle(fontWeight: FontWeight.w800, color: SColors.ink)),
+                // Büyük yazıda rakam daireye sığacak kadar küçülür.
+                child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text('${k.cost}', style: const TextStyle(fontWeight: FontWeight.w800, color: SColors.ink))),
               ),
             ]),
             const SizedBox(height: 4),

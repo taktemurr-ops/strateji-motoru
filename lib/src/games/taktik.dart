@@ -642,7 +642,7 @@ class _TViewState extends State<_TView> with Clock, MetaLoader {
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: FilledButton.icon(onPressed: ended ? null : _endUnit, icon: const Icon(Icons.skip_next), label: Text(st(lang, 'wait'), maxLines: 1)),
+                child: FilledButton.icon(onPressed: ended ? null : _endUnit, icon: const Icon(Icons.skip_next), label: Text(st(lang, 'wait'), maxLines: 1, overflow: TextOverflow.ellipsis)),
               ),
             ]),
     );
@@ -1326,7 +1326,7 @@ class _TDuelViewState extends State<TDuelView> with Clock, DuelHost {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: FilledButton.icon(onPressed: () => _send('w'), icon: const Icon(Icons.skip_next), label: Text(st(lang, 'wait'), maxLines: 1)),
+                  child: FilledButton.icon(onPressed: () => _send('w'), icon: const Icon(Icons.skip_next), label: Text(st(lang, 'wait'), maxLines: 1, overflow: TextOverflow.ellipsis)),
                 ),
               ]),
       ),
