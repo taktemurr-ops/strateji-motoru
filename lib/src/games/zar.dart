@@ -6,6 +6,7 @@ import 'package:studio_core/core/rng.dart';
 import 'package:studio_core/core/stats.dart';
 
 import '../core.dart';
+import '../studio_chrome.dart';
 import '../texts.dart';
 
 /// Zar Macerası: kendi zarlarından oluşan bir torba. Her tur zarları at,
@@ -433,7 +434,7 @@ class _ZViewState extends State<_ZView> with Clock, MetaLoader {
             for (var i = 0; i < s.faces.length; i++) _die(i),
           ]),
           const SizedBox(height: 4),
-          Text(st(lang, 'zm_keepHint'), textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, color: Colors.black54)),
+          Text(st(lang, 'zm_keepHint'), textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, color: kStudioSubtle)),
           const SizedBox(height: 6),
           Row(children: [
             Expanded(

@@ -6,6 +6,7 @@ import 'package:studio_core/core/rng.dart';
 import 'package:studio_core/core/stats.dart';
 
 import '../core.dart';
+import '../studio_chrome.dart';
 import '../texts.dart';
 import 'krallik_cards.dart';
 
@@ -395,36 +396,36 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
   }
 
   Widget _card(String lang, KCard c, int season, int side) {
-    final scheme = Theme.of(context).colorScheme;
     return LayoutBuilder(builder: (context, box) {
       final w = math.min<double>(box.maxWidth, 360);
       return Container(
         width: w,
         padding: const EdgeInsets.all(16),
+        // Danışman kartı: onaylı tasarımın degrade kartı, mevsim renginde kenar.
         decoration: BoxDecoration(
-          color: scheme.surface.withValues(alpha: 0.97),
-          borderRadius: BorderRadius.circular(22),
+          gradient: StudioLook.of(context).tile,
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(color: kKSeasonColors[season], width: 3),
-          boxShadow: const [BoxShadow(blurRadius: 14, color: Colors.black26)],
+          boxShadow: [BoxShadow(blurRadius: 18, color: kKSeasonColors[season].withValues(alpha: 0.35))],
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Row(children: [
-            Icon(kKSeasonIcons[season], color: kKSeasonColors[season]),
+            Icon(kKSeasonIcons[season], color: Color.lerp(kKSeasonColors[season], Colors.white, 0.35)),
             const SizedBox(width: 6),
-            Expanded(child: Text(st(lang, kKSeasons[season]), style: TextStyle(color: kKSeasonColors[season], fontWeight: FontWeight.w700))),
+            Expanded(child: Text(st(lang, kKSeasons[season]), style: TextStyle(color: Color.lerp(kKSeasonColors[season], Colors.white, 0.35), fontWeight: FontWeight.w800))),
           ]),
           const SizedBox(height: 10),
-          CircleAvatar(radius: 30, backgroundColor: kKMeterColors[c.who % 4].withValues(alpha: 0.2), child: Icon(kKAdvisorIcons[c.who], size: 32, color: SColors.ink)),
+          CircleAvatar(radius: 30, backgroundColor: kKMeterColors[c.who % 4].withValues(alpha: 0.45), child: Icon(kKAdvisorIcons[c.who], size: 32, color: Colors.white)),
           const SizedBox(height: 4),
-          Text(st(lang, kKAdvisors[c.who]), style: const TextStyle(fontSize: 12, color: Colors.black54)),
+          Text(st(lang, kKAdvisors[c.who]), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kStudioSubtle)),
           const SizedBox(height: 10),
-          Text(c.question(lang), textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, height: 1.3)),
+          Text(c.question(lang), textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, height: 1.3, color: Colors.white)),
           const SizedBox(height: 10),
           SizedBox(
             height: 20,
             child: side < 0
                 ? null
-                : Text(side == 0 ? c.left(lang) : c.right(lang), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800, color: SColors.accent)),
+                : Text(side == 0 ? c.left(lang) : c.right(lang), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w800, color: StudioLook.of(context).accent)),
           ),
         ]),
       );
