@@ -531,6 +531,16 @@ class _IslandScene extends CustomPainter {
     final r = Offset.zero & s;
     c.drawRect(r, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: sky).createShader(r));
     if (weather == 0) c.drawCircle(Offset(w * 0.82, h * 0.42), 26, Paint()..color = const Color(0xFFFFE08A));
+    // Üstteki olay kartının yazısı açık gökte de okunsun: üstten koyu geçiş.
+    final band = Rect.fromLTWH(0, 0, w, h * 0.42);
+    c.drawRect(
+        band,
+        Paint()
+          ..shader = const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xB3101A2E), Color(0x00101A2E)],
+          ).createShader(band));
     // Deniz ve dalgalar.
     final seaY = h * 0.6;
     c.drawRect(Rect.fromLTWH(0, seaY, w, h - seaY), Paint()..color = weather == 3 ? const Color(0xFF26415C) : const Color(0xFF2E86AB));
@@ -588,13 +598,13 @@ class _IslandScene extends CustomPainter {
     if (shelter >= 3) c.drawRect(Rect.fromLTWH(bx - 24, by - 14, 48, 14), Paint()..color = const Color(0xFF8D6E63));
     // Kamp ateşi: sıcaklık arttıkça büyür.
     final fx = w * 0.78, fy = h * 0.86;
-    c.drawLine(Offset(fx - 14, fy + 4), Offset(fx + 14, fy - 2), Paint()
+    c.drawLine(Offset(fx - 22, fy + 6), Offset(fx + 22, fy - 3), Paint()
       ..color = const Color(0xFF5D4037)
-      ..strokeWidth = 5);
-    c.drawLine(Offset(fx - 14, fy - 2), Offset(fx + 14, fy + 4), Paint()
+      ..strokeWidth = 7);
+    c.drawLine(Offset(fx - 22, fy - 3), Offset(fx + 22, fy + 6), Paint()
       ..color = const Color(0xFF5D4037)
-      ..strokeWidth = 5);
-    final fl = 6 + math.min(10, math.max(0, warmth)) * 2.2;
+      ..strokeWidth = 7);
+    final fl = 10 + math.min(10, math.max(0, warmth)) * 3.2;
     c.drawOval(Rect.fromCenter(center: Offset(fx, fy - fl / 2), width: fl * 0.9, height: fl), Paint()..color = const Color(0xFFF77F00));
     c.drawOval(Rect.fromCenter(center: Offset(fx, fy - fl / 3), width: fl * 0.45, height: fl * 0.55), Paint()..color = const Color(0xFFFFD166));
     // Hava: yağmur, kar, fırtına şimşeği.
