@@ -1,0 +1,3 @@
+tags:
+  shots:
+    skip: "Yalnız shots işinde çalışır (--run-skipped)."

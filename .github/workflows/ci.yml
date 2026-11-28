@@ -23,3 +23,34 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze --no-fatal-infos
       - run: flutter test --reporter expanded
+  shots:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.9"
+          channel: stable
+          cache: true
+      - run: sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-color-emoji >/dev/null 2>&1 || true
+      - run: flutter pub get
+      - name: Görüntüler
+        run: |
+          export SHOTS_ONLY="$(cat test/shots_only.txt 2>/dev/null || true)"
+          flutter test test/shots_test.dart --tags shots --run-skipped --total-shards 2 --shard-index ${{ matrix.shard }} --reporter expanded 2>&1 | tee shots.log || true
+      - name: Sonuçlar ve görüntüler günlüğe (küçük JPEG, base64)
+        if: always()
+        run: |
+          grep -h "SONUC|\|overflowed\|EXCEPTION" shots.log | head -200 || true
+          cd build/shots 2>/dev/null || exit 0
+          for f in *.png; do
+            [ -f "$f" ] || continue
+            convert "$f" -resize '1400x1400>' -quality 60 "${f%.png}.jpg"
+            echo "SHOT|${f%.png}|$(base64 -w0 "${f%.png}.jpg")"
+          done
