@@ -38,7 +38,7 @@ jobs:
           flutter-version: "3.47.9"
           channel: stable
           cache: true
-      - run: sudo apt-get install -y fonts-noto-core fonts-noto-cjk fonts-noto-color-emoji >/dev/null 2>&1 || true
+      - run: sudo apt-get install -y imagemagick fonts-noto-core fonts-noto-cjk fonts-noto-color-emoji >/dev/null 2>&1 || true
       - run: flutter pub get
       - name: Görüntüler
         run: |
