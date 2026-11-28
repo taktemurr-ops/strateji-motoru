@@ -374,10 +374,19 @@ mixin Clock<T extends StatefulWidget> on State<T> {
   Timer? _t;
   final List<Timer> _later = [];
 
+  AppLifecycleListener? _life;
+  bool _background = false;
+
+  /// Oyun duraklı mı: uygulama arka planda ya da oyunun üstünde başka bir
+  /// sayfa/pencere (duraklatma menüsü, reklam, ayarlar) açık. Gerçek zamanlı
+  /// türler (kuşatma, sürü, sekme) bu sürede ilerlemez; saat de durur.
+  bool get held => _background || (mounted && ModalRoute.of(context)?.isCurrent == false);
+
   void startClock() {
     _t?.cancel();
+    _life ??= AppLifecycleListener(onStateChange: (st) => _background = st != AppLifecycleState.resumed);
     _t = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!ended && mounted) setState(() => seconds++);
+      if (!ended && mounted && !held) setState(() => seconds++);
     });
   }
 
@@ -389,6 +398,7 @@ mixin Clock<T extends StatefulWidget> on State<T> {
 
   @override
   void dispose() {
+    _life?.dispose();
     _t?.cancel();
     for (final t in _later) {
       t.cancel();

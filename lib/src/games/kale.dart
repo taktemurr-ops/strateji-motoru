@@ -290,7 +290,7 @@ class _KkViewState extends State<_KkView> with Clock, MetaLoader {
     startClock();
     setState(() => go = true);
     loop = Timer.periodic(const Duration(milliseconds: 100), (_) {
-      if (!mounted || ended) return;
+      if (!mounted || ended || held) return;
       final c0 = s.castle[0];
       setState(s.step);
       if (s.castle[0] < c0) p.sfx(Sfx.error);

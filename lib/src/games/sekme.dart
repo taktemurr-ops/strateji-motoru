@@ -357,7 +357,7 @@ class _TsViewState extends State<_TsView> with Clock, MetaLoader {
   }
 
   void _frame() {
-    if (!mounted || ended || !s.busy) return;
+    if (!mounted || ended || !s.busy || held) return;
     final h0 = s.hearts, b0 = s.broken, f0 = s.floor;
     setState(() {
       for (var i = 0; i < 4 && s.busy; i++) {

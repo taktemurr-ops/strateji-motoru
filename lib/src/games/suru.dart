@@ -379,7 +379,7 @@ class _SuViewState extends State<_SuView> with Clock, MetaLoader {
   }
 
   void _tick() {
-    if (!mounted || ended) return;
+    if (!mounted || ended || held) return;
     final a = aim;
     var dx = 0.0, dy = 0.0;
     if (a != null) {
