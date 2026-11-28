@@ -432,7 +432,18 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
           if (s.v[7] > 0) const Icon(Icons.carpenter, color: SColors.good),
         ]),
         const SizedBox(height: 6),
-        Expanded(child: SingleChildScrollView(child: s.phase == 0 && !s.over ? _eventCard(lang) : _jobs(lang))),
+        Expanded(
+          child: Stack(children: [
+            // Issız kıyı sahnesi: hava durumu, barınak (0-3), ateşin boyu (sıcaklık).
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: CustomPaint(painter: _IslandScene(s.weather, s.v[5], s.v[2], s.day)),
+              ),
+            ),
+            SingleChildScrollView(child: s.phase == 0 && !s.over ? _eventCard(lang) : _jobs(lang)),
+          ]),
+        ),
       ]),
     );
   }
@@ -500,4 +511,122 @@ class _KViewState extends State<_KView> with Clock, MetaLoader {
 
 extension on KSim {
   bool get over => won || lost;
+}
+
+/// Hayatta kalma sahnesi (süs): deniz, kumsal, palmiye, barınak, kamp ateşi
+/// ve günün havası (güneş / yağmur / soğuk / fırtına).
+class _IslandScene extends CustomPainter {
+  final int weather, shelter, warmth, day;
+  _IslandScene(this.weather, this.shelter, this.warmth, this.day);
+
+  @override
+  void paint(Canvas c, Size s) {
+    final w = s.width, h = s.height;
+    final sky = switch (weather) {
+      1 => [const Color(0xFF5B6C7D), const Color(0xFF8FA3B3)],
+      2 => [const Color(0xFF9FB8CC), const Color(0xFFDCE7EF)],
+      3 => [const Color(0xFF2B2F45), const Color(0xFF4D5570)],
+      _ => [const Color(0xFF6EC1E4), const Color(0xFFBFE6F5)],
+    };
+    final r = Offset.zero & s;
+    c.drawRect(r, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: sky).createShader(r));
+    if (weather == 0) c.drawCircle(Offset(w * 0.82, h * 0.42), 26, Paint()..color = const Color(0xFFFFE08A));
+    // Deniz ve dalgalar.
+    final seaY = h * 0.6;
+    c.drawRect(Rect.fromLTWH(0, seaY, w, h - seaY), Paint()..color = weather == 3 ? const Color(0xFF26415C) : const Color(0xFF2E86AB));
+    final wave = Paint()
+      ..color = Colors.white.withValues(alpha: 0.35)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    for (var k = 0; k < 4; k++) {
+      final y = seaY + 8 + k * 10.0;
+      final path = Path()..moveTo(0, y);
+      for (var x = 0.0; x <= w; x += 24) {
+        path.quadraticBezierTo(x + 6, y - 4, x + 12, y);
+      }
+      c.drawPath(path, wave);
+    }
+    // Kumsal.
+    final sand = Path()
+      ..moveTo(0, h)
+      ..lineTo(0, h * 0.74)
+      ..quadraticBezierTo(w * 0.45, h * 0.64, w, h * 0.76)
+      ..lineTo(w, h)
+      ..close();
+    c.drawPath(sand, Paint()..color = weather == 2 ? const Color(0xFFEDE6DA) : const Color(0xFFE9C98B));
+    // Palmiye.
+    final tx = w * 0.16, ty = h * 0.72;
+    c.drawLine(Offset(tx, ty), Offset(tx + 12, ty - h * 0.24), Paint()
+      ..color = const Color(0xFF8B5A2B)
+      ..strokeWidth = 7
+      ..strokeCap = StrokeCap.round);
+    final crown = Offset(tx + 12, ty - h * 0.24);
+    for (final a in const [-2.6, -2.0, -1.2, -0.5, 0.2]) {
+      c.drawLine(crown, crown + Offset(math.cos(a) * 34, math.sin(a) * 18 + 10), Paint()
+        ..color = const Color(0xFF3E8E41)
+        ..strokeWidth = 6
+        ..strokeCap = StrokeCap.round);
+    }
+    // Barınak: seviyesine göre kazık, çatı, duvar.
+    final bx = w * 0.5, by = h * 0.8;
+    if (shelter >= 1) {
+      for (final dx in const [-26.0, 26.0]) {
+        c.drawLine(Offset(bx + dx, by), Offset(bx + dx * 0.2, by - 46), Paint()
+          ..color = const Color(0xFF6D4C41)
+          ..strokeWidth = 5);
+      }
+    }
+    if (shelter >= 2) {
+      c.drawPath(
+          Path()
+            ..moveTo(bx - 34, by - 10)
+            ..lineTo(bx, by - 52)
+            ..lineTo(bx + 34, by - 10)
+            ..close(),
+          Paint()..color = const Color(0xFFB5894E));
+    }
+    if (shelter >= 3) c.drawRect(Rect.fromLTWH(bx - 24, by - 14, 48, 14), Paint()..color = const Color(0xFF8D6E63));
+    // Kamp ateşi: sıcaklık arttıkça büyür.
+    final fx = w * 0.78, fy = h * 0.86;
+    c.drawLine(Offset(fx - 14, fy + 4), Offset(fx + 14, fy - 2), Paint()
+      ..color = const Color(0xFF5D4037)
+      ..strokeWidth = 5);
+    c.drawLine(Offset(fx - 14, fy - 2), Offset(fx + 14, fy + 4), Paint()
+      ..color = const Color(0xFF5D4037)
+      ..strokeWidth = 5);
+    final fl = 6 + math.min(10, math.max(0, warmth)) * 2.2;
+    c.drawOval(Rect.fromCenter(center: Offset(fx, fy - fl / 2), width: fl * 0.9, height: fl), Paint()..color = const Color(0xFFF77F00));
+    c.drawOval(Rect.fromCenter(center: Offset(fx, fy - fl / 3), width: fl * 0.45, height: fl * 0.55), Paint()..color = const Color(0xFFFFD166));
+    // Hava: yağmur, kar, fırtına şimşeği.
+    if (weather == 1 || weather == 3) {
+      final rain = Paint()
+        ..color = Colors.white.withValues(alpha: 0.45)
+        ..strokeWidth = 1.5;
+      for (var k = 0; k < 40; k++) {
+        final x = (k * 37.0 + day * 11) % w, y = (k * 53.0) % (h * 0.95);
+        c.drawLine(Offset(x, y), Offset(x - 4, y + 10), rain);
+      }
+    }
+    if (weather == 2) {
+      for (var k = 0; k < 30; k++) {
+        c.drawCircle(Offset((k * 41.0 + day * 7) % w, (k * 67.0) % (h * 0.95)), 2.2, Paint()..color = Colors.white);
+      }
+    }
+    if (weather == 3) {
+      c.drawPath(
+          Path()
+            ..moveTo(w * 0.6, h * 0.08)
+            ..lineTo(w * 0.55, h * 0.3)
+            ..lineTo(w * 0.62, h * 0.3)
+            ..lineTo(w * 0.56, h * 0.5),
+          Paint()
+            ..color = const Color(0xFFFFF3B0)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 3);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _IslandScene o) =>
+      o.weather != weather || o.shelter != shelter || o.warmth != warmth || o.day != day;
 }
